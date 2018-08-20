@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+    <h1 align="center">chat app</h1>
+    <style>
+        div.sho {
+          display: none;
+        }
+        
+        </style>
+  </head>
+  <body>
+    
+    <div id="hd" class="hde" align="center">
+        <input  id="fr" autocomplete="off" placeholder="enter ur name"/><br><br>
+        <input  id="to" autocomplete="off" placeholder="receiver name"/><br><br>
+        <button id="sub">Send</button>
+      </div>
+
+    <div id="sh" class="sho" align="center">
+          <input  id="s" autocomplete="off" placeholder="enter message" /><button id="msgsend">Send</button>
+    </div>  
+    <div>
+        <ul id="messages" style="list-style-type:none" ></ul>
+    </div>
+  
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    
+    <script>
+      $(function() {
+        console.log("hi..");
+        var socket = io();
+        
+        $("#sub").click(function(ev){
+          ev.preventDefault();
+          $('#hd').hide();
+          $('#sh').show();
+          socket.emit('set-name', $("#fr").val());
+          $( "#msgsend" ).click(function() {
+            socket.emit('chat message', {send:$('#fr').val(),msg:$('#s').val(),rec:$("#to").val()});
+            let vari =  $('#s').val();
+            console.log(vari)
+            $("#messages").append("<li>you: "+  $('#s').val()+ "</li>");
+            $('#s').val(" ");
+          });///wait man dont do anythig okk...
+
+          return false;
+        });
+          socket.on("chat message",function(obj){//msg
+             $("#messages").append(`<li style="text-align: right">${obj.send}: ${obj.msg}</li>`);
+          });
+          return false;
+      });
+    </script>
+    
+  </body>
+</html>
